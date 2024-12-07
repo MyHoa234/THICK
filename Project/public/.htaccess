@@ -1,0 +1,32 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Custom rules for BE and FE folders
+    # Redirect requests to BE/index.php if accessing /BE
+    RewriteCond %{REQUEST_URI} ^/BE
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^BE/(.*)$ BE/index.php [L]
+
+    # Redirect requests to FE/index.php if accessing /FE
+    RewriteCond %{REQUEST_URI} ^/FE
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^FE/(.*)$ FE/index.php [L]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>
